@@ -69,10 +69,10 @@ Do an ```ls``` and then ```cd``` into the directory.  Make certain the contents 
 4.  Do a ```git commit -m "My first commit"```
 5.  Do a ```git push```.  You may need to set the remote origin for this to work! It will be something like this: ```git remote add origin git@github.com:yourusername/yourrepository.git```
 
-## Section 5: Add a Python File:
+## Section 5: Add a Java File:
 
 1. Create a Python file named `tokens.py`.
-2. In this file, write a function named `readandcount` that reads in a text file and counts the number of tokens (words).
+2. In this file, write a function named `readandcount` that reads in a text file and counts the number of tokens (words).  It should print the number of words in the file!  Note - I will run this!
 3. Run the command ```git status```.  Copy and paste the output into the text file you will submit to D2L.  It should show the file is Untracked.
 4. Add the file and then commit it.
 5. Run the command ```git status```.  Copy and paste the output into the text file you will submit to D2L.  It should show there is nothing to commit.
