@@ -71,8 +71,8 @@ Do an ```ls``` and then ```cd``` into the directory.  Make certain the contents 
 
 ## Section 5: Add a Java File:
 
-1. Create a Python file named `tokens.py`.
-2. In this file, write a function named `readandcount` that reads in a text file and counts the number of tokens (words).  It should print the number of words in the file!  Note - I will run this!
+1. Create a Java file named `TokenCount.java`.
+2. In this file, write in the ```main``` method code that reads in a text file from the command line and counts the number of tokens (words).  It should print the number of words in the file!  Note - I will run this!
 3. Run the command ```git status```.  Copy and paste the output into the text file you will submit to D2L.  It should show the file is Untracked.
 4. Add the file and then commit it.
 5. Run the command ```git status```.  Copy and paste the output into the text file you will submit to D2L.  It should show there is nothing to commit.
