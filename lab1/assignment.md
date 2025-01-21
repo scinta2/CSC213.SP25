@@ -8,7 +8,7 @@ You will need to create a text document you submit to D2L to complete this assig
    - Create a new project on GitHub.
    - Set the project to **Private**.
    - Add a `README.md` file to the project.
-   - Add a .gitignore and make the template be Python.
+   - Add a .gitignore and make the template be Java.
    - Add a license to your project.
    - Create the project.
    - Invite me as a collaborator (GitHub username: `delveccj`).
