@@ -48,9 +48,9 @@ Copy and paste the output into the text file you will submit to D2L
 
 ## Section 3: Cloning the Project
 
-From the terminal, clone the project.  You should clone using HTTPS.  Like so
+From the terminal, clone the project.  You should clone using HTTPS.  Like so (where this is my project)
 ```
-git clone https://github.com/delveccj/CSC395_Fall24.git
+git clone https://github.com/delveccj/CSC213_Spring25.git
 ```
 Do an ```ls``` and then ```cd``` into the directory.  Make certain the contents of the git repo you created are there.
 
