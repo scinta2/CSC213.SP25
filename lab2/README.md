@@ -266,7 +266,7 @@ Below is a **step-by-step guide** to demonstrate the **build/run/stop** lifecycl
 Here is your lab challenge!  You will need to do this part yourself!  When we ran the Ubuntu container the command we ran was:
 
 ```bash
-CMD ["/bin/bash"]
+CMD ["tail", "-f", "/dev/null"]
 ```
 
 Which keeps it running.  Like a server.  However, you can have a container that runs, performs a task, and once it completes it stops.  For example - run from the command line:
