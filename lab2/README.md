@@ -8,7 +8,15 @@ Think about these scenarios
 
 - I have a Java program that works with a relational database.  How could I put those two together easily?
 
-Welcome to containers.  A solution to so so many problems.
+Welcome to containers.  A solution to so so many problems.  
+
+Oh - before we start - issue this command:
+
+```bash
+sudo usermod -aG docker <username>
+```
+
+Logout and then log back in.
 
 ## What is a Container? ##
 
@@ -31,53 +39,10 @@ RUN apt-get update && apt-get install -y \
 # Default command to run when the container starts
 CMD ["/bin/bash"]
 ```
+A Dockerfile basically defines an operating system environment—down to the base OS, installed packages, and default commands—all in a straightforward, plain text script. Then Docker builds a container image from it, which you can run anywhere Docker is installed.  It's a **wild** and **powerful** concept!
 
 ---
 
-## What Are Docker Layers?
-
-Docker images are built in **layers**. Each instruction in your Dockerfile (`FROM`, `RUN`, `COPY`, etc.) creates a **new layer**. Layers are essentially **read-only snapshots** of the filesystem at each build step. The final Docker image is composed of **all** these stacked layers.
-
-**Why does Docker do this?**  
-- **Reusability**: When you build a new image that reuses the same layers, Docker doesn’t need to rebuild or re-download them—it caches them for faster builds and smaller downloads.  
-- **Efficiency**: Only new or changed layers need to be transferred or rebuilt when your Dockerfile updates.
-
----
-
-## Where Are Layers Stored?
-
-On a typical Linux Docker host, layers are stored under:
-```
-/var/lib/docker/overlay2/
-```
-*(assuming you’re using the **overlay2** storage driver.)*  
-
-You’ll see a bunch of directories named with **hex** IDs—these map to the **layer IDs**. Docker manages these under the hood. Each directory roughly corresponds to a layer, but it’s not trivial to navigate them directly because Docker merges (overlays) them into a single file system view for your container.
-
-If you want to **“get a gander”** (inspect) at the layers in a more human-readable way, try:
-
-```bash
-docker history <image-name-or-id>
-```
-This shows a list of layers in the image, which Dockerfile command created each layer, and the size of that layer. For example:
-
-```bash
-docker history ubuntu:latest
-```
-Might output something like:
-
-```
-IMAGE               CREATED             CREATED BY                                      SIZE        COMMENT
-<hash>              3 days ago          /bin/sh -c #(nop)  CMD ["bash"]                0B
-<hash>              3 days ago          /bin/sh -c #(nop)  ADD file:................   72.8MB
-...
-```
-
-Each line corresponds to a **layer**. That’s generally more illuminating than looking at the raw overlay2 directories.
-
-Below is a **step-by-step guide** to demonstrate the **build/run/stop** lifecycle of a Docker container—emphasizing how a container is **like a process** that you can start, see running, then stop, while the **image** remains intact on your system (much like the “.exe” in Windows remains on disk even after you close the application).
-
----
 
 ## 1. Create (or Copy) Your Dockerfile
 
@@ -167,7 +132,7 @@ abcdef123456    my-ubuntu-image      "/bin/bash"    Up 5 seconds              my
 You can also 'bash' into the container.  Sort of like ssh'ing into it.  Like so:
 
 ```bash
-docker exec -it curl-container /bin/bash
+docker exec -it my-ubuntu-container /bin/bash
 ```
 
 Now you’re in another Bash session inside the same container. Type exit to leave that session (the container remains running until you exit the first terminal or explicitly stop it).
@@ -233,13 +198,68 @@ This is **just like** how the `.exe` for Word remains on your disk even after yo
 
 ---
 
-## 9. Summary so Far
+##9. Are There Pre-Fab Containers
+
+Yes.  100s of thousands.  Let's take a peek at this site:
+
+[https://hub.docker.com](https://hub.docker.com)
+
+---
+
+## Summary so Far
 
 - **Docker Image** → Think of it as an **“.exe”** file on Windows. It **sits on disk**, ready to be run.
 - **Docker Container** → Think of it as the **process** that runs when you double-click the `.exe`.  
   - **Starting** the container is like **launching the program**.  
   - **Stopping** the container is like **closing the program**.  
   - The “process” may stop, but the “exe” (the Docker image) **remains** on your system.
+
+## What Are Docker Layers?
+
+Docker images are built in **layers**. Each instruction in your Dockerfile (`FROM`, `RUN`, `COPY`, etc.) creates a **new layer**. Layers are essentially **read-only snapshots** of the filesystem at each build step. The final Docker image is composed of **all** these stacked layers.
+
+**Why does Docker do this?**  
+- **Reusability**: When you build a new image that reuses the same layers, Docker doesn’t need to rebuild or re-download them—it caches them for faster builds and smaller downloads.  
+- **Efficiency**: Only new or changed layers need to be transferred or rebuilt when your Dockerfile updates.
+
+![](https://miro.medium.com/v2/resize:fit:1302/format:webp/1*AkZf5G5bfV7vq9XT9b83vQ.png)
+---
+
+## Where Are Layers Stored?
+
+On a typical Linux Docker host, layers are stored under:
+```
+/var/lib/docker/overlay2/
+```
+*(assuming you’re using the **overlay2** storage driver.)*  
+
+You’ll see a bunch of directories named with **hex** IDs—these map to the **layer IDs**. Docker manages these under the hood. Each directory roughly corresponds to a layer, but it’s not trivial to navigate them directly because Docker merges (overlays) them into a single file system view for your container.
+
+If you want to **“get a gander”** (inspect) at the layers in a more human-readable way, try:
+
+```bash
+docker history <image-name-or-id>
+```
+This shows a list of layers in the image, which Dockerfile command created each layer, and the size of that layer. For example:
+
+```bash
+docker history ubuntu:latest
+```
+Might output something like:
+
+```
+IMAGE               CREATED             CREATED BY                                      SIZE        COMMENT
+<hash>              3 days ago          /bin/sh -c #(nop)  CMD ["bash"]                0B
+<hash>              3 days ago          /bin/sh -c #(nop)  ADD file:................   72.8MB
+...
+```
+
+Each line corresponds to a **layer**. That’s generally more illuminating than looking at the raw overlay2 directories.
+
+Below is a **step-by-step guide** to demonstrate the **build/run/stop** lifecycle of a Docker container—emphasizing how a container is **like a process** that you can start, see running, then stop, while the **image** remains intact on your system (much like the “.exe” in Windows remains on disk even after you close the application).
+
+---
+
 
 ## 10. Lab Exercise
 
@@ -249,18 +269,17 @@ Here is your lab challenge!  You will need to do this part yourself!  When we ra
 CMD ["/bin/bash"]
 ```
 
-Which keeps it running.  Like a server.  However, you can have a container that runs, performs a task, and once it completes it starts.  For example - run:
+Which keeps it running.  Like a server.  However, you can have a container that runs, performs a task, and once it completes it stops.  For example - run from the command line:
 
 ```bash
 docker run hello-world
 ```
 
-All it does is print out a message.  So - you will need to create a container that does this!  Here is your assignment:
-Below is a **sample assignment** you can give to students. It provides them with a **partial Dockerfile template** for an OpenJDK-based image, and asks them to fill in the missing Dockerfile instructions to copy and compile their Java program—and to provide proof that it runs successfully. 
+All it does is print out a message.  So - you will need to create a container that does this!  
 
 ---
 
-## Assignment: Build and Run a Simple Java Program in a Docker Container
+## Lab Assignment: Build and Run a Simple Java Program in a Docker Container
 
 ### Objectives
 
@@ -282,13 +301,13 @@ FROM openjdk:17
 # 2) Set a working directory for your app (optional, but good practice)
 WORKDIR /app
 
-# 3) Copy your Java source files (or compiled .class / .jar files) into the container
+# 3) Copy your Java source file into the container
 << YOU FIGURE OUT THE CODE! >>
 
-# 4) Example: If you're copying .java files, compile them
+# 4) Compile your Java source code
 << YOU FIGURE OUT THE CODE! >>
 
-# 5) Define the default command to run your compiled program
+# 5) Define the default command to run your compiled program. 
 << YOU FIGURE OUT THE CODE! >>
 ```
 
@@ -296,22 +315,21 @@ WORKDIR /app
 - Fill in the **three missing lines** (for `COPY`, `RUN`, and `CMD`) so that the container can **compile** and **run** your Java program.
 
 **Hints**:  
+
 - Use the `COPY` instruction to copy your source code from the **host** (the folder with your Dockerfile) into `/app` **inside** the container.  
-- If you have a file called `HelloWorld.java`, you’d do something like:  
-  ```dockerfile
-  COPY HelloWorld.java /app/
-  ```
-- Use the `RUN` instruction to compile your Java code (e.g., `RUN javac HelloWorld.java`).  
-- Use `CMD` (or `ENTRYPOINT`) to **run** your Java program (e.g. `CMD ["java", "HelloWorld"]`).
+
+- Use the `RUN` instruction to compile your Java code.  
+- Use `CMD` (or `ENTRYPOINT`) to **run** your Java program.
 - The program just needs to say something like "Hello World, CSC 213 is great!"
 
 ---
 
 ### 2. Build Your Docker Image
 
-1. Place your **Dockerfile** and your **Java source file(s)** in the **same directory**.  
+1. You will probably want to place your **Dockerfile** and your **Java source file(s)** in the **same directory**.  
 2. Open a terminal in that directory.  
 3. Run:
+
    ```bash
    docker build -t my-java-app .
    ```
@@ -323,9 +341,11 @@ WORKDIR /app
 ### 3. Verify the Image
 
 After a successful build, list your images:
+
 ```bash
 docker images
 ```
+
 You should see `my-java-app` in the list.
 
 ---
@@ -351,6 +371,7 @@ A D2L dropbox has been established.  Include:
 2. **Java source code** (e.g., `HelloWorld.java`).  
 3. **Proof of success**: 
    - A screenshot or copy/paste of the terminal output from running:
+
      ```bash
      docker build -t my-java-app .
      docker run --rm my-java-app
