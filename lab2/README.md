@@ -37,7 +37,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Default command to run when the container starts
-CMD ["/bin/bash"]
+CMD ["tail", "-f", "/dev/null"]
 ```
 A Dockerfile basically defines an operating system environment—down to the base OS, installed packages, and default commands—all in a straightforward, plain text script. Then Docker builds a container image from it, which you can run anywhere Docker is installed.  It's a **wild** and **powerful** concept!
 
