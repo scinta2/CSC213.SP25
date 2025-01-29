@@ -53,7 +53,7 @@ Let’s say your Dockerfile looks like this:
 FROM ubuntu:latest
 RUN apt-get update && apt-get install -y curl
 # This keeps the container running indefinitely!
-CMD ["/bin/bash"]
+CMD ["tail", "-f", "/dev/null"]
 ```
 
 1. Open a text editor.
